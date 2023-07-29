@@ -1,6 +1,21 @@
 import React, { useState } from 'react';
+import { v4 as uuid } from 'uuid';
 import PropTypes from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import styled from '@emotion/styled';
+
+const FormContainer = styled.div`
+  /* Add your styles here */
+`;
+
+const ButtonWrapper = styled.div`
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 const TaskForm = ({ addTask }) => {
   const [title, setTitle] = useState('');
@@ -8,11 +23,9 @@ const TaskForm = ({ addTask }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (title.trim() === '' || description.trim() === '') return;
-
     const newTask = {
-      id: uuidv4(),
+      id: uuid(),
       title,
       description,
       done: false,
@@ -23,24 +36,38 @@ const TaskForm = ({ addTask }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        placeholder="Write a task"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <br />
-      <br />
-      <textarea
-        placeholder="Write a description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
-      <br />
-      <br />
-      <button type="submit">Save Task</button>
-    </form>
+    <FormContainer>
+      <form onSubmit={handleSubmit}>
+        <TextField
+          fullWidth
+          label="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          variant="filled"
+          margin="normal"
+        />
+        <TextField
+          fullWidth
+          multiline
+          rows={4}
+          label="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          variant="filled"
+          margin="normal"
+        />
+        <ButtonWrapper>
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            startIcon={<AddIcon />}
+          >
+            Add Task
+          </Button>
+        </ButtonWrapper>
+      </form>
+    </FormContainer>
   );
 };
 

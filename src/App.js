@@ -1,8 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import TaskForm from './components/TaskForm';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import { styled } from '@mui/material/styles';
 import TaskList from './components/TaskList';
+import TaskForm from './components/TaskForm';
 
-import './App.css';
+const AppContainer = styled(Box)({
+  textAlign: 'center',
+  padding: '0 20px',
+});
+
+const GroupSelect = styled(FormControl)({
+  minWidth: 200,
+});
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -16,7 +29,7 @@ function App() {
         id: '1',
         title: 'Task 1',
         description: 'Description for Task 1',
-        completed: false,
+        done: false,
         group: 'group1',
       },
       // Add more tasks here
@@ -38,38 +51,50 @@ function App() {
   };
 
   const checkDone = (taskId) => {
-    setTasks(
-      tasks.map((task) => (task.id === taskId ? { ...task, done: !task.done } : task)),
-    );
+    setTasks((prevTasks) => prevTasks.map((task) => {
+      if (task.id === taskId) {
+        // Toggle the `done` property or set it to false if it's missing
+        return { ...task, done: !task.done || false };
+      }
+      return task;
+    }));
   };
 
   return (
-    <div className="App">
-      <h1>
+    <AppContainer>
+      <Typography variant="h3" gutterBottom>
         FunFox Task Manager
-      </h1>
-      <div>
-        <select value={selectedGroup} onChange={(e) => setSelectedGroup(e.target.value)}>
-          <option value="">Groups</option>
-          {groups.map((group) => (
-            <option key={group} value={group}>{group}</option>
-          ))}
-        </select>
-      </div>
-      <br />
-      <div>
+      </Typography>
+      <Box>
+        <GroupSelect>
+          <Select
+            value={selectedGroup}
+            onChange={(e) => setSelectedGroup(e.target.value)}
+            displayEmpty
+            renderValue={(value) => (value || 'Groups')}
+          >
+            <MenuItem value="">
+              <em>Groups</em>
+            </MenuItem>
+            {groups.map((group) => (
+              <MenuItem key={group} value={group}>
+                {group}
+              </MenuItem>
+            ))}
+          </Select>
+        </GroupSelect>
+      </Box>
+      <Box mt={4}>
         <TaskForm addTask={addTask} />
-      </div>
-      <div>
+      </Box>
+      <Box mt={4}>
         <TaskList
-          tasks={tasks.filter(
-            (task) => selectedGroup === '' || task.group === selectedGroup,
-          )}
+          tasks={tasks.filter((task) => selectedGroup === '' || task.group === selectedGroup)}
           deleteTask={deleteTask}
           checkDone={checkDone}
         />
-      </div>
-    </div>
+      </Box>
+    </AppContainer>
   );
 }
 
