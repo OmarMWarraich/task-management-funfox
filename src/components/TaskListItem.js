@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useDrag, useDrop } from 'react-dnd';
+import { toast } from 'react-toastify';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -46,6 +47,34 @@ const TaskListItem = ({
     },
   });
 
+  const handleDelete = (taskId) => {
+    deleteTask(taskId);
+
+    toast.error(`${task.title} has been deleted!`, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const handleCheck = (taskId) => {
+    checkDone(taskId);
+
+    toast.success(`${task.title} has been completed!`, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
   return (
     <div ref={(node) => drag(drop(node))}>
       <TaskContainer done={task.done}>
@@ -57,14 +86,14 @@ const TaskListItem = ({
         </div>
         <Checkbox
           checked={task.done}
-          onChange={() => checkDone(task.id)}
+          onChange={() => handleCheck(task.id)}
           inputProps={{ 'aria-label': 'checkbox' }}
         />
         <Button
           variant="contained"
           color="secondary"
           startIcon={<DeleteIcon />}
-          onClick={() => deleteTask(task.id)}
+          onClick={() => handleDelete(task.id)}
         >
           Delete
         </Button>

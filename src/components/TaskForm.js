@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import styled from '@emotion/styled';
+import { toast } from 'react-toastify';
 
 const FormContainer = styled.div`
   /* Add your styles here */
@@ -31,6 +32,17 @@ const TaskForm = ({ addTask }) => {
       done: false,
     };
     addTask(newTask);
+
+    toast(`Task "${title}" has been added.`, {
+      position: 'top-right',
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
     setTitle('');
     setDescription('');
   };

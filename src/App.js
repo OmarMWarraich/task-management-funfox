@@ -7,6 +7,9 @@ import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import TaskList from './components/TaskList';
 import TaskForm from './components/TaskForm';
 
@@ -108,6 +111,7 @@ function App() {
           />
         </Box>
       </AppContainer>
+      <ToastContainer />
     </DndProvider>
   );
 }
