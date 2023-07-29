@@ -5,6 +5,8 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import TaskList from './components/TaskList';
 import TaskForm from './components/TaskForm';
 
@@ -60,41 +62,53 @@ function App() {
     }));
   };
 
+  const moveTaskItem = (fromIndex, toIndex) => {
+    const reorderedTasks = Array.from(tasks);
+    const [removed] = reorderedTasks.splice(fromIndex, 1);
+    reorderedTasks.splice(toIndex, 0, removed);
+    setTasks(reorderedTasks);
+  };
+
   return (
-    <AppContainer>
-      <Typography variant="h3" gutterBottom>
-        FunFox Task Manager
-      </Typography>
-      <Box>
-        <GroupSelect>
-          <Select
-            value={selectedGroup}
-            onChange={(e) => setSelectedGroup(e.target.value)}
-            displayEmpty
-            renderValue={(value) => (value || 'Groups')}
-          >
-            <MenuItem value="">
-              <em>Groups</em>
-            </MenuItem>
-            {groups.map((group) => (
-              <MenuItem key={group} value={group}>
-                {group}
+    <DndProvider backend={HTML5Backend}>
+      <AppContainer>
+        <Typography variant="h3" gutterBottom>
+          FunFox Task Manager
+        </Typography>
+        <Box>
+          <GroupSelect>
+            <Select
+              value={selectedGroup}
+              onChange={(e) => setSelectedGroup(e.target.value)}
+              displayEmpty
+              renderValue={(value) => (value || 'Groups')}
+            >
+              <MenuItem value="">
+                <em>Groups</em>
               </MenuItem>
-            ))}
-          </Select>
-        </GroupSelect>
-      </Box>
-      <Box mt={4}>
-        <TaskForm addTask={addTask} />
-      </Box>
-      <Box mt={4}>
-        <TaskList
-          tasks={tasks.filter((task) => selectedGroup === '' || task.group === selectedGroup)}
-          deleteTask={deleteTask}
-          checkDone={checkDone}
-        />
-      </Box>
-    </AppContainer>
+              {groups.map((group) => (
+                <MenuItem key={group} value={group}>
+                  {group}
+                </MenuItem>
+              ))}
+            </Select>
+          </GroupSelect>
+        </Box>
+        <Box mt={4}>
+          <TaskForm addTask={addTask} />
+        </Box>
+        <Box mt={4}>
+          <TaskList
+            tasks={tasks.filter(
+              (task) => selectedGroup === '' || task.group === selectedGroup,
+            )}
+            deleteTask={deleteTask}
+            checkDone={checkDone}
+            moveTaskItem={moveTaskItem}
+          />
+        </Box>
+      </AppContainer>
+    </DndProvider>
   );
 }
 
