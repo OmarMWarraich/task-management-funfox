@@ -11,7 +11,7 @@ const TaskContainer = styled(Box)({
   marginBottom: '20px',
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'space-between',
+  justifyContent: 'space-evenly',
   '@media (max-width: 600px)': {
     flexDirection: 'column',
     justifyContent: 'center',
@@ -31,14 +31,16 @@ const TaskList = ({ tasks, deleteTask, checkDone }) => {
   return (
     <div>
       {tasks.map((task) => (
-        <TaskContainer key={task.id}>
+        <TaskContainer
+          key={task.id}
+        >
 
           <TaskTitle variant="h6" done={task.done}>
             {task.title}
           </TaskTitle>
-
-          <Typography>{task.description}</Typography>
-
+          <div style={{ wordWrap: 'break-word', width: '165px' }}>
+            <Typography>{task.description}</Typography>
+          </div>
           <Checkbox
             checked={task.done}
             onChange={() => handleCheckboxChange(task.id)}
