@@ -1,10 +1,16 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
+import { getData } from '../reducers/dataSlice';
+import { getGroups } from '../reducers/groupsSlice';
+import { getTasks } from '../reducers/tasksSlice';
+import { getUsers } from '../reducers/usersSlice';
 
 import TaskList from './TaskList';
 import TaskForm from './TaskForm';
@@ -19,6 +25,7 @@ const GroupSelect = styled(FormControl)({
 });
 
 const TaskManager = () => {
+  const dispatch = useDispatch();
   const [tasks, setTasks] = useState([]);
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState('');
@@ -42,6 +49,23 @@ const TaskManager = () => {
     setTasks(mockTasksResponse);
     setGroups(mockGroupsResponse);
   }, []);
+
+  useEffect(() => {
+    dispatch(getData());
+    dispatch(getGroups());
+    dispatch(getTasks());
+    dispatch(getUsers());
+  }, [dispatch]);
+
+  const data = useSelector((state) => state.data);
+  const groupsData = useSelector((state) => state.groups);
+  const tasksData = useSelector((state) => state.tasks);
+  const usersData = useSelector((state) => state.users);
+
+  console.log(data);
+  console.log(groupsData);
+  console.log(tasksData);
+  console.log(usersData);
 
   const addTask = (newTask) => {
     setTasks([...tasks, newTask]);
