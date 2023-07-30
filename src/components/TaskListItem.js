@@ -6,22 +6,10 @@ import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 
 import ItemTypes from './ItemTypes';
-
-const TaskContainer = styled(Box)({
-  marginBottom: '20px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-around',
-  '@media (max-width: 600px)': {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    width: '100%',
-  },
-});
 
 const TaskTitle = styled(Typography)(({ done }) => ({
   textDecoration: done ? 'line-through' : 'none',
@@ -77,27 +65,51 @@ const TaskListItem = ({
 
   return (
     <div ref={(node) => drag(drop(node))}>
-      <TaskContainer done={task.done}>
-        <TaskTitle variant="h6" done={task.done}>
-          {task.title}
-        </TaskTitle>
-        <div style={{ wordWrap: 'break-word', width: '165px' }}>
+      <Grid
+        container
+        sx={{
+          backgroundColor: '#f0f0f0',
+        }}
+        alignItems="center"
+        marginY={2}
+      >
+        <Grid item xs={12} sm={3} paddingY={2}>
+          {' '}
+          {/* For small screens, the TaskTitle takes the full width */}
+          <TaskTitle variant="h6" done={task.done}>
+            {task.title}
+          </TaskTitle>
+        </Grid>
+
+        <Grid item xs={12} sm={6} paddingY={2}>
+          {' '}
+          {/* For small screens, the description takes the full width */}
           <Typography>{task.description}</Typography>
-        </div>
-        <Checkbox
-          checked={task.done}
-          onChange={() => handleCheck(task.id)}
-          inputProps={{ 'aria-label': 'checkbox' }}
-        />
-        <Button
-          variant="contained"
-          color="secondary"
-          startIcon={<DeleteIcon />}
-          onClick={() => handleDelete(task.id)}
-        >
-          Delete
-        </Button>
-      </TaskContainer>
+        </Grid>
+
+        <Grid item xs={6} sm={1} paddingY={2}>
+          {' '}
+          {/* For small screens, each item takes 6 columns */}
+          <Checkbox
+            checked={task.done}
+            onChange={() => handleCheck(task.id)}
+            inputProps={{ 'aria-label': 'checkbox' }}
+          />
+        </Grid>
+
+        <Grid item xs={6} sm={2} paddingY={2}>
+          {' '}
+          {/* For small screens, the Delete button takes 6 columns */}
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<DeleteIcon />}
+            onClick={() => handleDelete(task.id)}
+          >
+            Delete
+          </Button>
+        </Grid>
+      </Grid>
     </div>
   );
 };
