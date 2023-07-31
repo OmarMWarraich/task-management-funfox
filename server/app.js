@@ -4,6 +4,14 @@ const cors = require('cors');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 
+const server = require('http').createServer(app);
+const io = require('socket.io')(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST']
+  },
+});
+
 const dbFilePath = './data/db.json';
 
 app.use(cors())
@@ -71,9 +79,26 @@ app.get('/getGroupName/:groupName', (req, res) => {
       }
     });
   });
+
+  io.on('connection', (socket) => {
+    console.log('a user connected');
+
+    setTimeout(() => {
+      const notificatioId = uuidv4();
+
+      const data = { 
+        id: notificatioId,
+        message: 'New notification!' 
+      };
+      
+      socket.emit('newNotification', data);
+    }, 5000);
+  });
+
+
   
 
 const PORT = 3001;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
