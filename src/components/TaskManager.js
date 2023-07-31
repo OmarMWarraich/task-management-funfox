@@ -30,8 +30,9 @@ const TaskManager = () => {
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState('');
   const [selectedUser, setSelectedUser] = useState('');
-  const usersData = useSelector((state) => state.users);
+  const [selectedUserId, setSelectedUserId] = useState('');
 
+  const usersData = useSelector((state) => state.users);
   const data = useSelector((state) => state.data);
   const groupsData = useSelector((state) => state.groups);
   const tasksData = useSelector((state) => state.tasks);
@@ -61,12 +62,17 @@ const TaskManager = () => {
         )
       );
 
+      const userOfTask = usersData.find((user) =>
+      user.tasks.some((userTask) => userTask.id === task.id)
+    );
+
       return {
         id: task.id,
         title: task.title,
         description: task.description,
         done: task.done,
         group: groupOfTask ? groupOfTask.name : 'Unknown Group',
+        user: userOfTask ? userOfTask.id : 'Unknown User',
       };
     });
 
@@ -103,7 +109,7 @@ const TaskManager = () => {
 
     // Update the original tasks array with the reordered tasks only for the selected group
     const updatedTasks = tasks.map((task) => {
-      if (task.group === selectedGroup) {
+      if (task.group === selectedGroup && task.user === selectedUserId ) {
         return reorderedTasks.shift();
       }
       return task;
@@ -114,7 +120,16 @@ const TaskManager = () => {
   };
 
   const handleUserChange = (event) => {
-    setSelectedUser(event.target.value);
+    const selectedUserName = event.target.value;
+    setSelectedUser(selectedUserName);
+
+    // Find the selected user id
+    const selectedUserObj = usersData.find((user) => user.Name === selectedUserName);
+    if (selectedUserObj) {
+      setSelectedUserId(selectedUserObj.id);
+    } else {
+      setSelectedUserId('');
+    }
   };
 
   const getUserTasksCount = (user) => {
@@ -125,7 +140,8 @@ const TaskManager = () => {
   };
 
   const filteredTasks = tasks.filter(
-    (task) => selectedGroup === '' || task.group === selectedGroup
+    (task) => (selectedGroup === '' || task.group === selectedGroup) &&
+    (selectedUserId === '' || task.user === selectedUserId)
   );
 
   return (
@@ -166,8 +182,12 @@ const TaskManager = () => {
               <em>Select User</em>
             </MenuItem>
             {usersData.map((user) => (
-              <MenuItem key={user.id} value={user.name}>
-                {user.Name} ({getUserTasksCount(user)} tasks)
+              <MenuItem key={user.id} value={user.Name}>
+                {user.Name} {
+                  data.map((group) => (
+                    group.users.some((userGroup) => userGroup.id === user.id) ? `(${group.name})` : ''
+                  ))
+                }
               </MenuItem>
             ))}
           </Select>
