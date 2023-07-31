@@ -30,53 +30,48 @@ const TaskManager = () => {
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState('');
 
-  useEffect(() => {
-    if (data.length > 0) {
-      return;
-    } else {
-      dispatch(getData());
-    }
-    if (groupsData.length > 0) {
-      return;
-    } else {
-      dispatch(getGroups());
-    }
-    if (tasksData.length > 0) {
-      return;
-    } else {
-      dispatch(getTasks());
-    }
-    if (usersData.length > 0) {
-      return;
-    } else {
-      dispatch(getUsers());
-    }
-  }, [dispatch]);
-  
   const data = useSelector((state) => state.data);
   const groupsData = useSelector((state) => state.groups);
   const tasksData = useSelector((state) => state.tasks);
   const usersData = useSelector((state) => state.users);
-  const transformedTaskArray = tasksData.map((task) => {
-    const groupOfTask = data.find((group) =>
-      group.users.some((user) =>
-        user.tasks.some((userTask) => userTask.id === task.id)
-      )
-    );
-  
-    return {
-      id: task.id,
-      title: task.title,
-      description: task.description,
-      done: task.done,
-      group: groupOfTask ? groupOfTask.name : 'Unknown Group',
-    };
-  });
 
   useEffect(() => {
+    // Fetch data only if it's not available in the store
+    if (data.length === 0) {
+      dispatch(getData());
+    }
+    if (groupsData.length === 0) {
+      dispatch(getGroups());
+    }
+    if (tasksData.length === 0) {
+      dispatch(getTasks());
+    }
+    if (usersData.length === 0) {
+      dispatch(getUsers());
+    }
+  }, [dispatch, data, groupsData, tasksData, usersData]);
+
+  useEffect(() => {
+    // Transform the tasksData and set the tasks state
+    const transformedTaskArray = tasksData.map((task) => {
+      const groupOfTask = data.find((group) =>
+        group.users.some((user) =>
+          user.tasks.some((userTask) => userTask.id === task.id)
+        )
+      );
+
+      return {
+        id: task.id,
+        title: task.title,
+        description: task.description,
+        done: task.done,
+        group: groupOfTask ? groupOfTask.name : 'Unknown Group',
+      };
+    });
+
     setTasks(transformedTaskArray);
     setGroups(groupsData);
-  }, [transformedTaskArray]);
+  }, [tasksData, data, groupsData]);
 
   const addTask = (newTask) => {
     setTasks([...tasks, newTask]);
