@@ -62,7 +62,8 @@ Todo App is a web application that allows users to create and manage their daily
 create and delete tasks. The application also allows the users to mark the tasks as completed or incomplete. The application
 takes the data from a backend api and displays it on the frontend. The backend api is built using express and node whereas 
 faker.js library is used to generate the data. Redux is used to manage the state of the application. The application is styled
-using material ui. Morover, the backend interacts with the frontend using socket.io.
+using material ui. Morover, the backend send real time push notifications to the frontend using socket.io. The app allows user
+belonging to a certain group to add tasks in their respective group.
 
 ## 🛠 Built With <a name="built-with"></a>
 
@@ -71,20 +72,20 @@ using material ui. Morover, the backend interacts with the frontend using socket
 <details>
   <summary>Client</summary>
   <ul>
-    <li><a href="">Embedded Ruby</a></li>
+    <li><a href="">CRA</a></li>
   </ul></details>
 
 <details>
   <summary>Server</summary>
   <ul>
-    <li><a href="">Rails</a></li>
+    <li><a href="">Express</a></li>
   </ul>
 </details>
 
 <details>
 <summary>Database</summary>
   <ul>
-    <li><a href="https://www.postgresql.org/">PostgreSQL</a></li>
+    <li><a href="">Mock Api</a></li>
   </ul>
 </details>
 
@@ -92,9 +93,10 @@ using material ui. Morover, the backend interacts with the frontend using socket
 
 ### Key Features <a name="key-features"></a>
 
-- **[User Authentication]**
-- **[Add/Display Category]**
-- **[Add/Display Transaction]**
+- **[Tasks Manipulation]**
+- **[Add/Delete Tasks]**
+- **[Real Time Notificaitons]**
+- **[Group Tasks]**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -103,7 +105,7 @@ using material ui. Morover, the backend interacts with the frontend using socket
 ## 🚀 Live Demo <a name="live-demo"></a>
 
 
-- [Live Demo Link](https://coinwallet-ova.fly.dev/spash/index)
+- Coming Soon
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -119,7 +121,7 @@ In order to run this project you need:
 
 
 ```sh
- gem install rails
+ sudo apt install node
 ```
 
 ### Setup
@@ -128,8 +130,7 @@ Clone this repository to your desired folder:
 
 
 ```sh
-  cd my-folder
-  git clone git@github.com:myaccount/my-project.git
+  git clone git@github.com:OmarMWarraich/task-management-funfox.git
 ```
 
 ### Install
@@ -138,8 +139,10 @@ Install this project with:
 
 
 ```sh
-  cd my-project
-  gem install
+  cd task-management-funfox
+  npm i
+  cd server
+  npm i
 ```
 
 ### Usage
@@ -148,32 +151,22 @@ To run the project, execute the following command:
 
 
 ```sh
-  rails server
+  cd task-management-funfox
+  npm start
+  cd server
+  npm start
 ```
 
 ### Run tests
 
 To run tests, run the following command:
 
-```sh
-  bin/rails test test/models/
-```
+Coming Soon
 
-### Video
-
-[Video Link](https://www.youtube.com/watch?v=xIW9CYveryM)
 
 ### Deployment
 
-You can deploy this project using:
-
-<!--
-Example:
-
-```sh
-
-```
- -->
+Coming Soon
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -194,10 +187,10 @@ Example:
 
 > Describe 1 - 3 features you will add to the project.
 
-- [ ] **[Pagination]**
-- [ ] **[OmniAuth and Stripe Integration]**
-- [ ] **[Web3 Integration]**
-- [ ] **[Bar Code Scanner]**
+- [ ] **[Tasks Addition to Backend API]**
+- [ ] **[Notifications about each action on the frontend]**
+- [ ] **[Admin Panel]**
+- [ ] **[Authentication & Login]**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -224,8 +217,7 @@ If you like this project please give it a ⭐️!.
 ## 🙏 Acknowledgments <a name="acknowledgements"></a>
 
 I would like to thank the following.
--  Gregoire Vella on Behance for the Original Design Idea.
-- Any body who shall read and review my code.
+-  Funfox for giving me the opportunity to work on this project.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
