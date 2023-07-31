@@ -29,11 +29,12 @@ const TaskManager = () => {
   const [tasks, setTasks] = useState([]);
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState('');
+  const [selectedUser, setSelectedUser] = useState('');
+  const usersData = useSelector((state) => state.users);
 
   const data = useSelector((state) => state.data);
   const groupsData = useSelector((state) => state.groups);
   const tasksData = useSelector((state) => state.tasks);
-  const usersData = useSelector((state) => state.users);
 
   useEffect(() => {
     // Fetch data only if it's not available in the store
@@ -83,13 +84,15 @@ const TaskManager = () => {
   };
 
   const checkDone = (taskId) => {
-    setTasks((prevTasks) => prevTasks.map((task) => {
-      if (task.id === taskId) {
-        // Toggle the `done` property or set it to false if it's missing
-        return { ...task, done: !task.done || false };
-      }
-      return task;
-    }));
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => {
+        if (task.id === taskId) {
+          // Toggle the `done` property or set it to false if it's missing
+          return { ...task, done: !task.done || false };
+        }
+        return task;
+      })
+    );
   };
 
   const moveTaskItem = (fromIndex, toIndex) => {
@@ -110,9 +113,19 @@ const TaskManager = () => {
     setTasks(updatedTasks);
   };
 
+  const handleUserChange = (event) => {
+    setSelectedUser(event.target.value);
+  };
+
+  const getUserTasksCount = (user) => {
+    const userTasks = tasks.filter((task) =>
+      user.tasks.some((userTask) => userTask.id === task.id)
+    );
+    return userTasks.length;
+  };
 
   const filteredTasks = tasks.filter(
-    (task) => selectedGroup === '' || task.group === selectedGroup,
+    (task) => selectedGroup === '' || task.group === selectedGroup
   );
 
   return (
@@ -139,6 +152,27 @@ const TaskManager = () => {
           </Select>
         </GroupSelect>
       </Box>
+      <Box mt={2}>
+        <FormControl>
+          <Select
+            value={selectedUser}
+            onChange={handleUserChange}
+            displayEmpty
+            renderValue={(value) =>
+              value ? `Selected User: ${value}` : 'Select User'
+            }
+          >
+            <MenuItem value="" disabled>
+              <em>Select User</em>
+            </MenuItem>
+            {usersData.map((user) => (
+              <MenuItem key={user.id} value={user.name}>
+                {user.Name} ({getUserTasksCount(user)} tasks)
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
       <Box mt={4}>
         <TaskForm addTask={addTask} />
       </Box>
@@ -154,4 +188,5 @@ const TaskManager = () => {
   );
 };
 
-export default TaskManager;
+export default TaskManager
+
