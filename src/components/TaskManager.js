@@ -31,41 +31,52 @@ const TaskManager = () => {
   const [selectedGroup, setSelectedGroup] = useState('');
 
   useEffect(() => {
-    // Mock API response for tasks
-    const mockTasksResponse = [
-      {
-        id: '1',
-        title: 'Task 1',
-        description: 'Description for Task 1',
-        done: false,
-        group: 'group1',
-      },
-      // Add more tasks here
-    ];
-
-    // Mock API response for groups
-    const mockGroupsResponse = ['group1', 'group2'];
-
-    setTasks(mockTasksResponse);
-    setGroups(mockGroupsResponse);
-  }, []);
-
-  useEffect(() => {
-    dispatch(getData());
-    dispatch(getGroups());
-    dispatch(getTasks());
-    dispatch(getUsers());
+    if (data.length > 0) {
+      return;
+    } else {
+      dispatch(getData());
+    }
+    if (groupsData.length > 0) {
+      return;
+    } else {
+      dispatch(getGroups());
+    }
+    if (tasksData.length > 0) {
+      return;
+    } else {
+      dispatch(getTasks());
+    }
+    if (usersData.length > 0) {
+      return;
+    } else {
+      dispatch(getUsers());
+    }
   }, [dispatch]);
-
+  
   const data = useSelector((state) => state.data);
   const groupsData = useSelector((state) => state.groups);
   const tasksData = useSelector((state) => state.tasks);
   const usersData = useSelector((state) => state.users);
+  const transformedTaskArray = tasksData.map((task) => {
+    const groupOfTask = data.find((group) =>
+      group.users.some((user) =>
+        user.tasks.some((userTask) => userTask.id === task.id)
+      )
+    );
+  
+    return {
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      done: task.done,
+      group: groupOfTask ? groupOfTask.name : 'Unknown Group',
+    };
+  });
 
-  console.log(data);
-  console.log(groupsData);
-  console.log(tasksData);
-  console.log(usersData);
+  useEffect(() => {
+    setTasks(transformedTaskArray);
+    setGroups(groupsData);
+  }, [transformedTaskArray]);
 
   const addTask = (newTask) => {
     setTasks([...tasks, newTask]);
