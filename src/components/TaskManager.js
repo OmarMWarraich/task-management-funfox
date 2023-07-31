@@ -18,14 +18,12 @@ const AppContainer = styled(Box)({
   padding: '0 20px',
 });
 
-const GroupSelect = styled(FormControl)({
-  minWidth: 200,
-});
-
 const TaskManager = () => {
   const dispatch = useDispatch();
   const [tasks, setTasks] = useState([]);
+  /* eslint-disable no-unused-vars */
   const [groups, setGroups] = useState([]);
+  /* eslint-disable no-unused-vars */
   const [selectedGroup, setSelectedGroup] = useState('');
   const [selectedUser, setSelectedUser] = useState('');
   const [selectedUserId, setSelectedUserId] = useState('');
@@ -72,9 +70,13 @@ const TaskManager = () => {
 
   const addTask = (newTask) => {
     /* eslint-disable no-param-reassign */
-    newTask.group = selectedGroup;
-    /* eslint-disable no-param-reassign */
-    newTask.user = selectedUser;
+    const nameOfGroup = data.find((group) => group.users.some((user) => user.id === selectedUserId))?.name;
+    // Assign selectedGroup and selectedUser to the new task object
+    newTask = {
+      ...newTask,
+      group: nameOfGroup,
+      user: selectedUserId,
+    };
     setTasks([newTask, ...tasks]);
   };
 
@@ -102,7 +104,7 @@ const TaskManager = () => {
     reorderedTasks.splice(toIndex, 0, removed);
 
     const updatedTasks = tasks.map((task) => {
-      if (task.group === selectedGroup && task.user === selectedUserId) {
+      if (task.user === selectedUserId) {
         return reorderedTasks.shift();
       }
       return task;
@@ -125,25 +127,7 @@ const TaskManager = () => {
 
   return (
     <AppContainer>
-      <Box mt={2}>
-        <GroupSelect>
-          <Select
-            value={selectedGroup}
-            onChange={(e) => setSelectedGroup(e.target.value)}
-            displayEmpty
-            renderValue={(value) => (value || 'Groups')}
-          >
-            <MenuItem value="">
-              <em>Groups</em>
-            </MenuItem>
-            {groups.map((group) => (
-              <MenuItem key={group} value={group}>
-                {group}
-              </MenuItem>
-            ))}
-          </Select>
-        </GroupSelect>
-      </Box>
+
       <Box mt={2}>
         <FormControl>
           <Select
