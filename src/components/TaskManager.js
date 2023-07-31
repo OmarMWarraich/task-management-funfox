@@ -74,7 +74,8 @@ const TaskManager = () => {
   }, [tasksData, data, groupsData]);
 
   const addTask = (newTask) => {
-    setTasks([...tasks, newTask]);
+    newTask.group = selectedGroup;
+    setTasks([newTask, ...tasks]);
   };
 
   const deleteTask = (taskId) => {
@@ -92,11 +93,27 @@ const TaskManager = () => {
   };
 
   const moveTaskItem = (fromIndex, toIndex) => {
-    const reorderedTasks = Array.from(tasks);
+    // Create a copy of the filteredTasks array to perform the reordering
+    const reorderedTasks = Array.from(filteredTasks);
     const [removed] = reorderedTasks.splice(fromIndex, 1);
     reorderedTasks.splice(toIndex, 0, removed);
-    setTasks(reorderedTasks);
+
+    // Update the original tasks array with the reordered tasks only for the selected group
+    const updatedTasks = tasks.map((task) => {
+      if (task.group === selectedGroup) {
+        return reorderedTasks.shift();
+      }
+      return task;
+    });
+
+    // Set the state with the updated tasks
+    setTasks(updatedTasks);
   };
+
+
+  const filteredTasks = tasks.filter(
+    (task) => selectedGroup === '' || task.group === selectedGroup,
+  );
 
   return (
     <AppContainer>
@@ -127,9 +144,7 @@ const TaskManager = () => {
       </Box>
       <Box mt={4}>
         <TaskList
-          tasks={tasks.filter(
-            (task) => selectedGroup === '' || task.group === selectedGroup,
-          )}
+          tasks={filteredTasks}
           deleteTask={deleteTask}
           checkDone={checkDone}
           moveTaskItem={moveTaskItem}
