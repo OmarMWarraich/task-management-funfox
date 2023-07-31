@@ -127,8 +127,7 @@ const TaskManager = () => {
 
   return (
     <AppContainer>
-
-      <Box mt={2}>
+      <Box mt={4}>
         <FormControl>
           <Select
             value={selectedUser}

@@ -12,7 +12,7 @@ const FormContainer = styled.div`
 `;
 
 const ButtonWrapper = styled.div`
-  margin-top: 10px;
+  margin-top: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
