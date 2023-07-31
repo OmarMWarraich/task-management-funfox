@@ -5,10 +5,12 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import TaskManager from './components/TaskManager';
+import NavBar from './components/NavBar';
 
 function App() {
   return (
     <DndProvider backend={HTML5Backend}>
+      <NavBar />
       <TaskManager />
       <ToastContainer />
     </DndProvider>

@@ -1,7 +1,5 @@
-/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
@@ -38,7 +36,6 @@ const TaskManager = () => {
   const tasksData = useSelector((state) => state.tasks);
 
   useEffect(() => {
-    // Fetch data only if it's not available in the store
     if (data.length === 0) {
       dispatch(getData());
     }
@@ -54,17 +51,10 @@ const TaskManager = () => {
   }, [dispatch, data, groupsData, tasksData, usersData]);
 
   useEffect(() => {
-    // Transform the tasksData and set the tasks state
     const transformedTaskArray = tasksData.map((task) => {
-      const groupOfTask = data.find((group) =>
-        group.users.some((user) =>
-          user.tasks.some((userTask) => userTask.id === task.id)
-        )
-      );
-
-      const userOfTask = usersData.find((user) =>
-      user.tasks.some((userTask) => userTask.id === task.id)
-    );
+      /* eslint-disable max-len */
+      const groupOfTask = data.find((group) => group.users.some((user) => user.tasks.some((userTask) => userTask.id === task.id)));
+      const userOfTask = usersData.find((user) => user.tasks.some((userTask) => userTask.id === task.id));
 
       return {
         id: task.id,
@@ -78,10 +68,13 @@ const TaskManager = () => {
 
     setTasks(transformedTaskArray);
     setGroups(groupsData);
-  }, [tasksData, data, groupsData]);
+  }, [tasksData, data, groupsData, usersData]);
 
   const addTask = (newTask) => {
+    /* eslint-disable no-param-reassign */
     newTask.group = selectedGroup;
+    /* eslint-disable no-param-reassign */
+    newTask.user = selectedUser;
     setTasks([newTask, ...tasks]);
   };
 
@@ -90,32 +83,31 @@ const TaskManager = () => {
   };
 
   const checkDone = (taskId) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) => {
-        if (task.id === taskId) {
-          // Toggle the `done` property or set it to false if it's missing
-          return { ...task, done: !task.done || false };
-        }
-        return task;
-      })
-    );
+    setTasks((prevTasks) => prevTasks.map((task) => {
+      if (task.id === taskId) {
+        return { ...task, done: !task.done || false };
+      }
+      return task;
+    }));
   };
 
+  const filteredTasks = tasks.filter(
+    (task) => (selectedGroup === '' || task.group === selectedGroup)
+    && (selectedUserId === '' || task.user === selectedUserId),
+  );
+
   const moveTaskItem = (fromIndex, toIndex) => {
-    // Create a copy of the filteredTasks array to perform the reordering
     const reorderedTasks = Array.from(filteredTasks);
     const [removed] = reorderedTasks.splice(fromIndex, 1);
     reorderedTasks.splice(toIndex, 0, removed);
 
-    // Update the original tasks array with the reordered tasks only for the selected group
     const updatedTasks = tasks.map((task) => {
-      if (task.group === selectedGroup && task.user === selectedUserId ) {
+      if (task.group === selectedGroup && task.user === selectedUserId) {
         return reorderedTasks.shift();
       }
       return task;
     });
 
-    // Set the state with the updated tasks
     setTasks(updatedTasks);
   };
 
@@ -123,7 +115,6 @@ const TaskManager = () => {
     const selectedUserName = event.target.value;
     setSelectedUser(selectedUserName);
 
-    // Find the selected user id
     const selectedUserObj = usersData.find((user) => user.Name === selectedUserName);
     if (selectedUserObj) {
       setSelectedUserId(selectedUserObj.id);
@@ -132,24 +123,9 @@ const TaskManager = () => {
     }
   };
 
-  const getUserTasksCount = (user) => {
-    const userTasks = tasks.filter((task) =>
-      user.tasks.some((userTask) => userTask.id === task.id)
-    );
-    return userTasks.length;
-  };
-
-  const filteredTasks = tasks.filter(
-    (task) => (selectedGroup === '' || task.group === selectedGroup) &&
-    (selectedUserId === '' || task.user === selectedUserId)
-  );
-
   return (
     <AppContainer>
-      <Typography variant="h3" gutterBottom>
-        FunFox Task Manager
-      </Typography>
-      <Box>
+      <Box mt={2}>
         <GroupSelect>
           <Select
             value={selectedGroup}
@@ -174,16 +150,16 @@ const TaskManager = () => {
             value={selectedUser}
             onChange={handleUserChange}
             displayEmpty
-            renderValue={(value) =>
-              value ? `Selected User: ${value}` : 'Select User'
-            }
+            renderValue={(value) => (value ? `Selected User: ${value}` : 'Select User')}
           >
             <MenuItem value="" disabled>
               <em>Select User</em>
             </MenuItem>
             {usersData.map((user) => (
               <MenuItem key={user.id} value={user.Name}>
-                {user.Name} {
+                {user.Name}
+                {' '}
+                {
                   data.map((group) => (
                     group.users.some((userGroup) => userGroup.id === user.id) ? `(${group.name})` : ''
                   ))
@@ -208,5 +184,4 @@ const TaskManager = () => {
   );
 };
 
-export default TaskManager
-
+export default TaskManager;

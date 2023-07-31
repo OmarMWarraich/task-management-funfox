@@ -37,7 +37,7 @@ TaskList.propTypes = {
   ).isRequired,
   deleteTask: PropTypes.func.isRequired,
   checkDone: PropTypes.func.isRequired,
-  moveTaskItem: PropTypes.func.isRequired, // Add the moveTaskItem prop type
+  moveTaskItem: PropTypes.func.isRequired,
 };
 
 export default TaskList;
