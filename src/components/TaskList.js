@@ -1,7 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import TaskListItem from './TaskListItem';
+
+const divVariants = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: (custom) => ({
+    opacity: 1,
+    transition: { delay: custom * 0.3 },
+  }),
+};
 
 const TaskList = ({
   tasks, deleteTask, checkDone, moveTaskItem,
@@ -12,16 +23,30 @@ const TaskList = ({
 
   return (
     <div>
-      {tasks.map((task, index) => (
-        <TaskListItem
-          key={task.id}
-          task={task}
-          index={index}
-          moveTask={moveTask}
-          deleteTask={deleteTask}
-          checkDone={checkDone}
-        />
-      ))}
+      <AnimatePresence>
+        {tasks.map((task, index) => (
+          <motion.div
+            variants={divVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            layoutId={task.id}
+            custom={index + 1}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 1.12 }}
+            icons
+            key={task.id}
+          >
+            <TaskListItem
+              task={task}
+              index={index}
+              moveTask={moveTask}
+              deleteTask={deleteTask}
+              checkDone={checkDone}
+            />
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </div>
   );
 };

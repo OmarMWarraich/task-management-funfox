@@ -62,7 +62,7 @@ Todo App is a web application that allows users to create and manage their daily
 create and delete tasks. The application also allows the users to mark the tasks as completed or incomplete. The application
 takes the data from a backend api and displays it on the frontend. The backend api is built using express and node whereas 
 faker.js library is used to generate the data. Redux is used to manage the state of the application. The application is styled
-using material ui. Morover, the backend send real time push notifications to the frontend using socket.io. The app allows user
+using material ui. Moreover, the backend sends real time push notifications to the frontend using socket.io. The app allows user
 belonging to a certain group to add tasks in their respective group.
 
 ## 🛠 Built With <a name="built-with"></a>

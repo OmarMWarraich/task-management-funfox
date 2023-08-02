@@ -4,6 +4,9 @@ import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import { motion } from 'framer-motion';
+import { useMediaQuery } from '@mui/material';
+
 import { styled } from '@mui/material/styles';
 import { getData } from '../reducers/dataSlice';
 import { getGroups } from '../reducers/groupsSlice';
@@ -19,6 +22,8 @@ const AppContainer = styled(Box)({
 });
 
 const TaskManager = () => {
+  const isMobile = useMediaQuery('(max-width:600px)');
+
   const dispatch = useDispatch();
   const [tasks, setTasks] = useState([]);
   /* eslint-disable no-unused-vars */
@@ -127,31 +132,39 @@ const TaskManager = () => {
 
   return (
     <AppContainer>
-      <Box mt={4}>
-        <FormControl>
-          <Select
-            value={selectedUser}
-            onChange={handleUserChange}
-            displayEmpty
-            renderValue={(value) => (value ? `Selected User: ${value}` : 'Select User')}
-          >
-            <MenuItem value="" disabled>
-              <em>Select User</em>
-            </MenuItem>
-            {usersData.map((user) => (
-              <MenuItem key={user.id} value={user.Name}>
-                {user.Name}
-                {' '}
-                {
+      <motion.div
+        initial={{ scale: 0, y: 0, opacity: 0 }}
+        animate={isMobile
+          ? { scale: 1.4, y: -120, opacity: 1 }
+          : { scale: 2, y: -120, opacity: 1 }}
+        transition={{ duration: 0.5, ease: 'linear', type: 'tween' }}
+      >
+        <Box mt={4}>
+          <FormControl>
+            <Select
+              value={selectedUser}
+              onChange={handleUserChange}
+              displayEmpty
+              renderValue={(value) => (value ? `Selected User: ${value}` : 'Select User')}
+            >
+              <MenuItem value="" disabled>
+                <em>Select User</em>
+              </MenuItem>
+              {usersData.map((user) => (
+                <MenuItem key={user.id} value={user.Name}>
+                  {user.Name}
+                  {' '}
+                  {
                   data.map((group) => (
                     group.users.some((userGroup) => userGroup.id === user.id) ? `(${group.name})` : ''
                   ))
                 }
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      </motion.div>
       <Box mt={4}>
         <TaskForm addTask={addTask} />
       </Box>
