@@ -12,7 +12,7 @@ import { getData } from '../reducers/dataSlice';
 import { getGroups } from '../reducers/groupsSlice';
 import { getTasks } from '../reducers/tasksSlice';
 import { getUsers } from '../reducers/usersSlice';
-
+/* eslint-disable-next-line */
 import TaskList from './TaskList';
 import TaskForm from './TaskForm';
 
@@ -103,21 +103,6 @@ const TaskManager = () => {
     && (selectedUserId === '' || task.user === selectedUserId),
   );
 
-  const moveTaskItem = (fromIndex, toIndex) => {
-    const reorderedTasks = Array.from(filteredTasks);
-    const [removed] = reorderedTasks.splice(fromIndex, 1);
-    reorderedTasks.splice(toIndex, 0, removed);
-
-    const updatedTasks = tasks.map((task) => {
-      if (task.user === selectedUserId) {
-        return reorderedTasks.shift();
-      }
-      return task;
-    });
-
-    setTasks(updatedTasks);
-  };
-
   const handleUserChange = (event) => {
     const selectedUserName = event.target.value;
     setSelectedUser(selectedUserName);
@@ -173,7 +158,7 @@ const TaskManager = () => {
           tasks={filteredTasks}
           deleteTask={deleteTask}
           checkDone={checkDone}
-          moveTaskItem={moveTaskItem}
+          reOrderTasks={setTasks}
         />
       </Box>
     </AppContainer>

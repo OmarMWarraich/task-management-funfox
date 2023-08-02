@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, Reorder } from 'framer-motion';
 
 import TaskListItem from './TaskListItem';
+import './TaskList.css';
 
 const divVariants = {
   hidden: {
@@ -15,17 +16,18 @@ const divVariants = {
 };
 
 const TaskList = ({
-  tasks, deleteTask, checkDone, moveTaskItem,
-}) => {
-  const moveTask = (fromIndex, toIndex) => {
-    moveTaskItem(fromIndex, toIndex);
-  };
-
-  return (
-    <div>
+  tasks, deleteTask, checkDone, reOrderTasks,
+}) => (
+  <ul style={{ listStyleType: 'none', margin: 0, padding: 0 }}>
+    <Reorder.Group
+      axis="y"
+      values={tasks}
+      onReorder={reOrderTasks}
+    >
       <AnimatePresence>
         {tasks.map((task, index) => (
-          <motion.div
+          <Reorder.Item
+            value={task}
             variants={divVariants}
             initial="hidden"
             animate="visible"
@@ -40,16 +42,15 @@ const TaskList = ({
             <TaskListItem
               task={task}
               index={index}
-              moveTask={moveTask}
               deleteTask={deleteTask}
               checkDone={checkDone}
             />
-          </motion.div>
+          </Reorder.Item>
         ))}
       </AnimatePresence>
-    </div>
-  );
-};
+    </Reorder.Group>
+  </ul>
+);
 
 TaskList.propTypes = {
   tasks: PropTypes.arrayOf(
@@ -62,7 +63,7 @@ TaskList.propTypes = {
   ).isRequired,
   deleteTask: PropTypes.func.isRequired,
   checkDone: PropTypes.func.isRequired,
-  moveTaskItem: PropTypes.func.isRequired,
+  reOrderTasks: PropTypes.func.isRequired,
 };
 
 export default TaskList;
