@@ -133,10 +133,11 @@ const TaskManager = () => {
   return (
     <AppContainer>
       <motion.div
+        initial={{ scale: 0, y: 0, opacity: 0 }}
         animate={isMobile
-          ? { scale: 1.4, y: [-120, 0, 120, 0, -120, 0, 120, 0, -120] }
-          : { scale: 2, y: [-120, 0, 120, 0, -120, 0, 120, 0, -120] }}
-        transition={{ duration: 2 }}
+          ? { scale: 1.4, y: -120, opacity: 1 }
+          : { scale: 2, y: -120, opacity: 1 }}
+        transition={{ duration: 0.5, ease: 'linear', type: 'tween' }}
       >
         <Box mt={4}>
           <FormControl>
