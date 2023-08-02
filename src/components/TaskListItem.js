@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useDrag, useDrop } from 'react-dnd';
 import { toast } from 'react-toastify';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
@@ -9,32 +8,13 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 
-import ItemTypes from './ItemTypes';
-
 const TaskTitle = styled(Typography)(({ done }) => ({
   textDecoration: done ? 'line-through' : 'none',
 }));
 
 const TaskListItem = ({
-  task, index, moveTask, deleteTask, checkDone,
+  task, deleteTask, checkDone,
 }) => {
-  const [, drag] = useDrag({
-    type: ItemTypes.TASK,
-    item: { id: task.id, index },
-  });
-
-  const [, drop] = useDrop({
-    accept: ItemTypes.TASK,
-    hover(item) {
-      if (item.index === index) {
-        return;
-      }
-      moveTask(item.index, index);
-      // eslint-disable-next-line no-param-reassign
-      item.index = index;
-    },
-  });
-
   const handleDelete = (taskId) => {
     deleteTask(taskId);
 
@@ -64,7 +44,7 @@ const TaskListItem = ({
   };
 
   return (
-    <div ref={(node) => drag(drop(node))}>
+    <div>
       <Grid
         container
         sx={{
@@ -113,8 +93,6 @@ TaskListItem.propTypes = {
     done: PropTypes.bool.isRequired,
     description: PropTypes.string.isRequired,
   }).isRequired,
-  index: PropTypes.number.isRequired,
-  moveTask: PropTypes.func.isRequired,
   deleteTask: PropTypes.func.isRequired,
   checkDone: PropTypes.func.isRequired,
 };
