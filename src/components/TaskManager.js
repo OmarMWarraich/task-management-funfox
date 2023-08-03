@@ -15,6 +15,7 @@ import { getUsers } from '../reducers/usersSlice';
 /* eslint-disable-next-line */
 import TaskList from './TaskList';
 import TaskForm from './TaskForm';
+import NotificationComponent from './NotificationComponent';
 
 const AppContainer = styled(Box)({
   textAlign: 'center',
@@ -23,6 +24,7 @@ const AppContainer = styled(Box)({
 
 const TaskManager = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
+  const isTablet = useMediaQuery('(max-width:960px)');
 
   const dispatch = useDispatch();
   const [tasks, setTasks] = useState([]);
@@ -116,52 +118,57 @@ const TaskManager = () => {
   };
 
   return (
-    <AppContainer>
-      <motion.div
-        initial={{ scale: 0, y: 0, opacity: 0 }}
-        animate={isMobile
-          ? { scale: 1.4, y: -120, opacity: 1 }
-          : { scale: 2, y: -120, opacity: 1 }}
-        transition={{ duration: 0.5, ease: 'linear', type: 'tween' }}
-      >
-        <Box mt={4}>
-          <FormControl>
-            <Select
-              value={selectedUser}
-              onChange={handleUserChange}
-              displayEmpty
-              renderValue={(value) => (value ? `Selected User: ${value}` : 'Select User')}
-            >
-              <MenuItem value="" disabled>
-                <em>Select User</em>
-              </MenuItem>
-              {usersData.map((user) => (
-                <MenuItem key={user.id} value={user.Name}>
-                  {user.Name}
-                  {' '}
-                  {
+    <>
+      <AppContainer isMobile={isMobile}>
+        <motion.div
+          initial={{ scale: 0, y: 0, opacity: 0 }}
+          animate={
+            isMobile
+              ? { scale: 1, opacity: 1 }
+              : { scale: isTablet ? 1.3 : 1.5, opacity: 1 }
+          }
+          transition={{ duration: 0.5, ease: 'linear', type: 'tween' }}
+        >
+          <Box mt={4}>
+            <FormControl>
+              <Select
+                value={selectedUser}
+                onChange={handleUserChange}
+                displayEmpty
+                renderValue={(value) => (value ? `Selected User: ${value}` : 'Select User')}
+              >
+                <MenuItem value="" disabled>
+                  <em>Select User</em>
+                </MenuItem>
+                {usersData.map((user) => (
+                  <MenuItem key={user.id} value={user.Name}>
+                    {user.Name}
+                    {' '}
+                    {
                   data.map((group) => (
                     group.users.some((userGroup) => userGroup.id === user.id) ? `(${group.name})` : ''
                   ))
                 }
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </motion.div>
+        <Box mt={4}>
+          <TaskForm addTask={addTask} />
         </Box>
-      </motion.div>
-      <Box mt={4}>
-        <TaskForm addTask={addTask} />
-      </Box>
-      <Box mt={4}>
-        <TaskList
-          tasks={filteredTasks}
-          deleteTask={deleteTask}
-          checkDone={checkDone}
-          reOrderTasks={setTasks}
-        />
-      </Box>
-    </AppContainer>
+        <Box mt={4}>
+          <TaskList
+            tasks={filteredTasks}
+            deleteTask={deleteTask}
+            checkDone={checkDone}
+            reOrderTasks={setTasks}
+          />
+        </Box>
+      </AppContainer>
+      <NotificationComponent />
+    </>
   );
 };
 
